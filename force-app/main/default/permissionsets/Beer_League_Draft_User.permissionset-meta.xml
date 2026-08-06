@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Beer_League_Draft_User</fullName>
+    <label>Beer League Draft User</label>
+    <description>Grants full access to the Beer League Draft app, including League Member and Draft Pick objects, the draft board, and all related fields.</description>
+
+    <!-- League Member object -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>true</viewAllRecords>
+        <object>League_Member__c</object>
+    </objectPermissions>
+
+    <!-- Draft Pick object -->
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowRead>true</allowRead>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>true</viewAllRecords>
+        <object>Draft_Pick__c</object>
+    </objectPermissions>
+
+    <!-- League Member fields (Draft_Order__c is required — excluded from FLS) -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>League_Member__c.Team_Owner__c</field>
+    </fieldPermissions>
+
+    <!-- Draft Pick fields (Overall_Pick__c is required — excluded from FLS) -->
+    <!-- Round__c, Pick_In_Round__c, Draft_Position__c are formulas — read-only -->
+    <fieldPermissions>
+        <editable>false</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Round__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Pick_In_Round__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Draft_Position__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.League_Member__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Player__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Is_Picked__c</field>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <readable>true</readable>
+        <field>Draft_Pick__c.Is_Upside_Down__c</field>
+    </fieldPermissions>
+
+    <!-- App visibility -->
+    <applicationVisibilities>
+        <application>Beer_League_Draft</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+
+    <!-- Tab visibility -->
+    <tabSettings>
+        <tab>League_Member__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Draft_Pick__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+
+    <!-- Standard permissions -->
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>RunReports</name>
+    </userPermissions>
+</PermissionSet>

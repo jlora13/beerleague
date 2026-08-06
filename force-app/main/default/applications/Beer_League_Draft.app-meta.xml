@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Beer League Draft</label>
+    <description>Fantasy draft management app for the beer league. Manage teams, draft order, and the live snake draft board.</description>
+    <uiType>Lightning</uiType>
+    <navType>Standard</navType>
+    <formFactors>Large</formFactors>
+    <tabs>standard-home</tabs>
+    <tabs>League_Member__c</tabs>
+    <tabs>Draft_Pick__c</tabs>
+    <brand>
+        <headerColor>#F4A623</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>League_Member_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>League_Member__c</pageOrSobjectType>
+        <type>Flexipage</type>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <content>Draft_Pick_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Draft_Pick__c</pageOrSobjectType>
+        <type>Flexipage</type>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+    </actionOverrides>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+</CustomApplication>

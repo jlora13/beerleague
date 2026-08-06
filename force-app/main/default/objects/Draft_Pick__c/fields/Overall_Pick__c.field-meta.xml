@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Overall_Pick__c</fullName>
+    <label>Overall Pick</label>
+    <description>The sequential pick number across the entire draft (1–240 for 20 rounds × 12 teams). Used as the source of truth for round and position calculations.</description>
+    <inlineHelpText>Pick number in the overall draft sequence, from 1 (first pick of round 1) to 240 (last pick of round 20).</inlineHelpText>
+    <type>Number</type>
+    <precision>3</precision>
+    <scale>0</scale>
+    <unique>true</unique>
+    <required>true</required>
+</CustomField>

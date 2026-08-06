@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Draft_Position__c</fullName>
+    <label>Draft Position</label>
+    <description>The League Member Draft Order value who should make this pick, accounting for snake order. Odd rounds count up (1→12), even rounds count down (12→1). The draftBoard LWC uses this to auto-assign the drafter.</description>
+    <inlineHelpText>Automatically calculated. Shows the draft order slot (1–12) of the team who owns this pick.</inlineHelpText>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <formula><![CDATA[IF(MOD(CEILING(Overall_Pick__c / 12), 2) = 1,
+    MOD(Overall_Pick__c - 1, 12) + 1,
+    12 - MOD(Overall_Pick__c - 1, 12))]]></formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+</CustomField>

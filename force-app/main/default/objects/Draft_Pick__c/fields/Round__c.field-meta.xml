@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Round__c</fullName>
+    <label>Round</label>
+    <description>Auto-calculated draft round (1–20) derived from the Overall Pick number. Odd rounds run picks 1→12; even rounds run 12→1 (snake order).</description>
+    <inlineHelpText>Automatically calculated. Shows which round this pick falls in (1–20).</inlineHelpText>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <formula><![CDATA[CEILING(Overall_Pick__c / 12)]]></formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+</CustomField>

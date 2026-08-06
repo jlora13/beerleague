@@ -1,0 +1,172 @@
+.draft-board-container {
+    overflow: auto;
+}
+
+.draft-board-scroll {
+    overflow-x: auto;
+}
+
+.draft-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.72rem;
+}
+
+.draft-table th,
+.draft-table td {
+    border: 1px solid #dddbda;
+    padding: 0;
+    vertical-align: top;
+}
+
+.round-header,
+.round-label {
+    background-color: #f3f3f3;
+    font-weight: 700;
+    text-align: center;
+    padding: 4px 6px;
+    min-width: 30px;
+    white-space: nowrap;
+}
+
+.pick-header {
+    background-color: #f4a623;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    padding: 5px 4px;
+    min-width: 90px;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Base cell */
+.draft-cell {
+    background-color: #ffffff;
+    padding: 4px 5px;
+    cursor: pointer;
+    min-width: 90px;
+    max-width: 110px;
+    min-height: 56px;
+    transition: background-color 0.12s;
+}
+
+.draft-cell:hover {
+    filter: brightness(0.93);
+}
+
+.draft-cell.active {
+    outline: 2px solid #0070d2;
+}
+
+/* Position colors — applied when picked */
+.draft-cell.picked.pos-wr  { background-color: #cce5ff; color: #004085; }
+.draft-cell.picked.pos-rb  { background-color: #ffe5cc; color: #7a3600; }
+.draft-cell.picked.pos-qb  { background-color: #f8d7da; color: #721c24; }
+.draft-cell.picked.pos-k   { background-color: #e2e3e5; color: #383d41; }
+.draft-cell.picked.pos-dst { background-color: #fff3cd; color: #856404; }
+.draft-cell.picked.pos-te  { background-color: #d4edda; color: #155724; }
+.draft-cell.picked.pos-default { background-color: #e8d5f5; color: #4a1a6e; }
+
+/* Empty cell — pick number */
+.cell-pick-num {
+    color: #c9c7c5;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 14px;
+}
+
+/* Filled cell content */
+.cell-name {
+    font-weight: 700;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-trade-badge {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    border-radius: 2px;
+    padding: 4px 3px;
+    margin-bottom: 4px;
+    background-color: #ff6b6b;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    line-height: 1.1;
+}
+
+.cell-pos-badge {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 3px;
+    padding: 1px 4px;
+    margin-bottom: 2px;
+    background: rgba(0,0,0,0.12);
+}
+
+.cell-team {
+    font-size: 0.68rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.85;
+}
+
+.cell-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: 2px;
+}
+
+.cell-bye,
+.cell-rank {
+    font-size: 0.6rem;
+    background: rgba(0,0,0,0.1);
+    border-radius: 3px;
+    padding: 1px 3px;
+    white-space: nowrap;
+}
+
+/* Cell content wrapper */
+.cell-content {
+    width: 100%;
+}
+
+.cell-content.upside-down {
+    display: block;
+    transform: rotate(180deg);
+}
+
+/* Search result rows */
+.player-result {
+    cursor: pointer;
+    padding: 6px 8px;
+}
+
+.player-result:hover {
+    background-color: #f3f3f3;
+}
+
+.player-result-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.player-result-meta {
+    display: block;
+    font-size: 0.75rem;
+    color: #706e6b;
+}

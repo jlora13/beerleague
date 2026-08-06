@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>League_Member__c</fullName>
+    <label>League Member</label>
+    <description>Lookup to the League Member (team) who owns this pick slot. Auto-assigned by the draftBoard LWC based on Draft Position and Draft Order.</description>
+    <inlineHelpText>The team assigned to make this pick. Automatically set by the draft board based on snake order.</inlineHelpText>
+    <type>Lookup</type>
+    <referenceTo>League_Member__c</referenceTo>
+    <relationshipLabel>Draft Picks</relationshipLabel>
+    <relationshipName>Draft_Picks</relationshipName>
+    <required>false</required>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

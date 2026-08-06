@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Picked__c</fullName>
+    <label>Is Picked</label>
+    <description>Indicates whether a player has been assigned to this pick slot. Drives visual state on the draft board (empty slot vs. filled slot).</description>
+    <inlineHelpText>Checked automatically when a player is drafted to this slot. Unchecked means the slot is still available.</inlineHelpText>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+</CustomField>

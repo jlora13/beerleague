@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Upside_Down__c</fullName>
+    <label>Is Upside Down</label>
+    <description>When checked, the draft board tile for this pick is rendered rotated 180 degrees. A purely cosmetic chaos feature.</description>
+    <inlineHelpText>Check this to flip the tile upside down on the draft board.</inlineHelpText>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+</CustomField>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>League Member</label>
+    <pluralLabel>League Members</pluralLabel>
+    <nameField>
+        <label>Team Name</label>
+        <type>Text</type>
+    </nameField>
+    <sharingModel>ReadWrite</sharingModel>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <visibility>Public</visibility>
+    <description>The League Member object represents a fantasy draft team in the beer league. It captures the Team Name, Draft Order (1–12), and optional Team Owner contact. Commonly used for managing draft order, tracking team ownership, and linking picks back to the correct drafter.</description>
+    <enableSearch>true</enableSearch>
+    <enableReports>true</enableReports>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+</CustomObject>

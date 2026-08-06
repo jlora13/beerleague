@@ -1,0 +1,1 @@
+DraftBoardSetup.seedPicks();

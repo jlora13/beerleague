@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pick_In_Round__c</fullName>
+    <label>Pick In Round</label>
+    <description>Auto-calculated pick position within the current round (1–12). Used alongside Round to determine snake-order Draft Position.</description>
+    <inlineHelpText>Automatically calculated. Shows this pick's position within its round (1–12).</inlineHelpText>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <formula><![CDATA[MOD(Overall_Pick__c - 1, 12) + 1]]></formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+</CustomField>

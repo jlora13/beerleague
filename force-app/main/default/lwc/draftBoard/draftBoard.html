@@ -1,0 +1,165 @@
+<template>
+    <lightning-card title="Beer League Draft Board" icon-name="standard:opportunity">
+
+        <template lwc:if={isLoading}>
+            <div class="slds-align_absolute-center slds-m-around_large">
+                <lightning-spinner alternative-text="Loading draft board..." size="large"></lightning-spinner>
+            </div>
+        </template>
+
+        <template lwc:if={hasError}>
+            <div class="slds-notify slds-notify_alert slds-alert_error slds-m-around_medium" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <p>Failed to load draft board: {errorMessage}</p>
+            </div>
+        </template>
+
+        <template lwc:if={noPicksReady}>
+            <div class="slds-m-around_large slds-align_absolute-center">
+                <p class="slds-text-heading_medium">No draft picks found.</p>
+                <p class="slds-text-body_regular slds-m-top_small">Run DraftBoardSetup.seedPicks() to seed all 240 pick records.</p>
+            </div>
+        </template>
+
+        <template lwc:if={picks.length}>
+            <div class="draft-board-container slds-m-around_small">
+                <div class="draft-board-scroll">
+                    <table class="draft-table">
+                        <thead>
+                            <tr>
+                                <th class="round-header">Rd</th>
+                                <template for:each={columnHeaders} for:item="hdr">
+                                    <th key={hdr.key} class="pick-header">{hdr.label}</th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={grid} for:item="row">
+                                <tr key={row.key}>
+                                    <td class="round-label">{row.round}</td>
+                                    <template for:each={row.cells} for:item="cell">
+                                        <td
+                                            key={cell.key}
+                                            class={cell.cellClass}
+                                            data-pickid={cell.pickId}
+                                            onclick={handleCellClick}
+                                        >
+                                            <template lwc:if={cell.tradedToName}>
+                                                <div class="cell-trade-badge">TRADED TO: {cell.tradedToName}</div>
+                                            </template>
+                                            <template lwc:if={cell.isPicked}>
+                                                <div class={cell.contentClass}>
+                                                    <div class="cell-pos-badge">{cell.playerPosition}</div>
+                                                    <div class="cell-name">{cell.playerFirstName} {cell.playerLastName}</div>
+                                                    <div class="cell-team">{cell.playerTeam}</div>
+                                                    <div class="cell-meta">
+                                                        <span class="cell-bye">Bye {cell.playerBye}</span>
+                                                        <span class="cell-rank">OVR {cell.playerOverallRank}</span>
+                                                        <span class="cell-rank">POS {cell.playerPositionRank}</span>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                            <template lwc:else>
+                                                <template lwc:if={cell.tradedToName}>
+                                                    <!-- Traded pick with no player yet -->
+                                                </template>
+                                                <template lwc:else>
+                                                    <div class="cell-pick-num">#{cell.overall}</div>
+                                                </template>
+                                            </template>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <!-- Player Search Modal -->
+        <template lwc:if={showPlayerSearch}>
+            <section role="dialog" class="slds-modal slds-fade-in-open" aria-modal="true" aria-label="Select Player">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseSearch}>
+                            <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
+                        </button>
+                        <h2 class="slds-modal__title">Select Player</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input
+                            type="search"
+                            label="Search Players"
+                            placeholder="Type a name..."
+                            value={searchTerm}
+                            onchange={handleSearchInput}
+                        ></lightning-input>
+                        <div class="slds-m-top_small slds-m-bottom_medium">
+                            <lightning-input
+                                type="checkbox"
+                                label="🙃 Add player upside down"
+                                checked={upsideDown}
+                                onchange={handleUpsideDownToggle}
+                            ></lightning-input>
+                        </div>
+
+                        <lightning-combobox
+                            name="tradedTo"
+                            label="Traded To (League Member)"
+                            value={selectedTradedTo}
+                            options={memberOptions}
+                            onchange={handleTradedToChange}
+                            class="slds-m-bottom_medium"
+                        ></lightning-combobox>
+
+                        <lightning-textarea
+                            name="tradeNotes"
+                            label="Trade Notes"
+                            value={selectedTradeNotes}
+                            onchange={handleTradeNotesChange}
+                            rows="3"
+                            class="slds-m-bottom_medium"
+                        ></lightning-textarea>
+
+                        <template lwc:if={playerSearchResults.length}>
+                            <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-m-top_x-small" role="listbox">
+                                <template for:each={playerSearchResults} for:item="result">
+                                    <li
+                                        key={result.id}
+                                        class="slds-media slds-listbox__item player-result"
+                                        role="option"
+                                        data-contactid={result.id}
+                                        onclick={handlePlayerSelect}
+                                    >
+                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                            <lightning-icon icon-name="standard:contact" size="x-small"></lightning-icon>
+                                        </span>
+                                        <span class="slds-media__body">
+                                            <span class="player-result-name">{result.firstName} {result.lastName}
+                                                <template lwc:if={result.position}> &nbsp;<strong>{result.position}</strong></template>
+                                            </span>
+                                            <span class="player-result-meta">
+                                                {result.team}
+                                                <template lwc:if={result.bye}> &bull; Bye {result.bye}</template>
+                                                <template lwc:if={result.overallRank}> &bull; OVR #{result.overallRank}</template>
+                                                <template lwc:if={result.positionRank}> &bull; POS #{result.positionRank}</template>
+                                            </span>
+                                        </span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={handleClearPick}>Clear Player</button>
+                        <button class="slds-button slds-button_neutral" onclick={handleSaveTradeInfo}>Save Trade Info</button>
+                        <button class="slds-button slds-button_neutral" onclick={handleCloseSearch}>Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </lightning-card>
+</template>
