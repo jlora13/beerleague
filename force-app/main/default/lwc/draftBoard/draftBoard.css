@@ -16,28 +16,16 @@
 
 .draft-board-container {
     overflow: auto;
-    min-height: 1200px;
 }
 
 .draft-board-scroll {
     overflow-x: auto;
-    height: 100%;
 }
 
 .draft-table {
     border-collapse: collapse;
     width: 100%;
     font-size: 0.72rem;
-    height: 100%;
-}
-
-.draft-table tbody {
-    display: flex;
-    flex-direction: column;
-}
-
-.draft-table tbody tr {
-    flex: 1;
 }
 
 .draft-table th,
