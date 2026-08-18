@@ -2,8 +2,9 @@ import { LightningElement, track, wire } from 'lwc';
 import { updateRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
+import getDraftSeasons from '@salesforce/apex/DraftBoardController.getDraftSeasons';
 import getDraftPicks from '@salesforce/apex/DraftBoardController.getDraftPicks';
-import getLeagueMembers from '@salesforce/apex/DraftBoardController.getLeagueMembers';
+import getLeagueMembersBySeason from '@salesforce/apex/DraftBoardController.getLeagueMembersBySeason';
 import searchPlayers from '@salesforce/apex/DraftBoardController.searchPlayers';
 import updateContactDraftedStatus from '@salesforce/apex/DraftBoardController.updateContactDraftedStatus';
 
@@ -24,6 +25,8 @@ const POSITION_CLASS = {
 export default class DraftBoard extends LightningElement {
     @track picks = [];
     @track members = [];
+    @track seasons = [];
+    @track selectedSeasonId = null;
     @track isLoading = true;
     @track searchTerm = '';
     @track playerSearchResults = [];
@@ -36,6 +39,7 @@ export default class DraftBoard extends LightningElement {
     @track error;
 
     _picksWireResult;
+    _memberWireResult;
     _searchTimer;
 
     // Odd rounds: left-to-right; even rounds: right-to-left
@@ -49,18 +53,37 @@ export default class DraftBoard extends LightningElement {
         return POSITION_CLASS[position] || 'pos-default';
     }
 
-    @wire(getLeagueMembers)
-    wiredMembers({ data, error }) {
-        if (data) {
-            this.members = data;
-            this.checkLoadingDone();
+    @wire(getDraftSeasons)
+    wiredSeasons({ data, error }) {
+        if (data && data.length > 0) {
+            this.seasons = data;
+            if (!this.selectedSeasonId) {
+                this.selectedSeasonId = data[0].Id;
+                this.isLoading = true;
+            }
         } else if (error) {
             this.error = error;
             this.isLoading = false;
         }
     }
 
-    @wire(getDraftPicks)
+    @wire(getLeagueMembersBySeason, { seasonId: '$selectedSeasonId' })
+    wiredMembers(result) {
+        this._memberWireResult = result;
+        if (result.data) {
+            this.members = result.data.map(m => ({
+                key: m.Draft_Order__c,
+                label: m.League_Member__r.Name,
+                id: m.League_Member__c
+            }));
+            this.checkLoadingDone();
+        } else if (result.error) {
+            this.error = result.error;
+            this.isLoading = false;
+        }
+    }
+
+    @wire(getDraftPicks, { seasonId: '$selectedSeasonId' })
     wiredPicks(result) {
         this._picksWireResult = result;
         if (result.data) {
@@ -78,16 +101,25 @@ export default class DraftBoard extends LightningElement {
         }
     }
 
+    get seasonOptions() {
+        return this.seasons.map(s => ({ label: s.Name, value: s.Id }));
+    }
+
     get columnHeaders() {
         return this.members.map(m => ({
-            key: m.Draft_Order__c,
-            label: m.Name
+            key: m.key,
+            label: m.label
         }));
     }
 
     get memberOptions() {
-        const opts = this.members.map(m => ({ label: m.Name, value: m.Id }));
+        const opts = this.members.map(m => ({ label: m.label, value: m.id }));
         return [{ label: '-- None --', value: '' }, ...opts];
+    }
+
+    handleSeasonChange(event) {
+        this.selectedSeasonId = event.detail.value;
+        this.isLoading = true;
     }
 
     get grid() {
@@ -175,7 +207,7 @@ export default class DraftBoard extends LightningElement {
     }
 
     doSearch(term) {
-        searchPlayers({ searchTerm: term })
+        searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
             .then(results => {
                 this.playerSearchResults = results.map(c => ({
                     id: c.Id,
@@ -265,7 +297,10 @@ export default class DraftBoard extends LightningElement {
                     message: newContactId ? 'Player drafted successfully.' : 'Pick slot cleared.',
                     variant: newContactId ? 'success' : 'info'
                 }));
-                return refreshApex(this._picksWireResult);
+                return Promise.all([
+                    refreshApex(this._picksWireResult),
+                    refreshApex(this._memberWireResult)
+                ]);
             })
             .catch(err => {
                 this.dispatchEvent(new ShowToastEvent({

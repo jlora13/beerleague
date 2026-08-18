@@ -22,6 +22,15 @@
         </template>
 
         <template lwc:if={picks.length}>
+            <div class="slds-m-around_small">
+                <lightning-combobox
+                    name="season"
+                    label="Season"
+                    value={selectedSeasonId}
+                    options={seasonOptions}
+                    onchange={handleSeasonChange}
+                ></lightning-combobox>
+            </div>
             <div class="draft-board-container slds-m-around_small">
                 <div class="draft-board-scroll">
                     <table class="draft-table">
