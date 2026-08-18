@@ -40,7 +40,7 @@ public with sharing class DraftBoardController {
         ];
     }
 
-    @AuraEnabled(cacheable=false)
+    @AuraEnabled(cacheable=true)
     public static List<Contact> searchPlayers(String searchTerm, Id seasonId) {
         String searchKey = String.escapeSingleQuotes(searchTerm) + '*';
         List<List<SObject>> results = [
