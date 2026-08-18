@@ -38,6 +38,13 @@ export default class DraftBoard extends LightningElement {
     _picksWireResult;
     _searchTimer;
 
+    connectedCallback() {
+        const saved = localStorage.getItem('draftBoardMaxRounds');
+        if (saved) {
+            this.maxRounds = parseInt(saved, 10);
+        }
+    }
+
     // Odd rounds: left-to-right; even rounds: right-to-left
     overallPickFor(team, round) {
         return round % 2 === 1
@@ -237,6 +244,7 @@ export default class DraftBoard extends LightningElement {
 
     handleMaxRoundsChange(event) {
         this.maxRounds = parseInt(event.detail.value, 10);
+        localStorage.setItem('draftBoardMaxRounds', this.maxRounds.toString());
     }
 
     savePick(pickId, newContactId, prevContactId, upsideDown, tradedTo, tradeNotes) {
