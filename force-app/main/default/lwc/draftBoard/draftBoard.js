@@ -67,14 +67,11 @@ export default class DraftBoard extends LightningElement {
     wiredMembers(result) {
         this._memberWireResult = result;
         if (result.data) {
-            this.members = result.data
-                .map(m => ({
-                    key: m.Draft_Order__c,
-                    label: m.League_Member__r.Name,
-                    id: m.League_Member__c,
-                    sortOrder: parseInt(m.Draft_Order__c, 10)
-                }))
-                .sort((a, b) => a.sortOrder - b.sortOrder);
+            this.members = result.data.map(m => ({
+                key: m.Draft_Order__c,
+                label: m.League_Member__r.Name,
+                id: m.League_Member__c
+            }));
             this.checkLoadingDone();
         } else if (result.error) {
             console.error('getLeagueMembersBySeason error:', result.error);
