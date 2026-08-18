@@ -26,7 +26,7 @@ export default class DraftBoard extends LightningElement {
     @track picks = [];
     @track members = [];
     @track seasons = [];
-    @track selectedSeasonId = null;
+    @track selectedSeasonId = 'a02aj00000cBR8fAAG'; // 2026 season
     @track isLoading = true;
     @track searchTerm = '';
     @track playerSearchResults = [];
@@ -55,28 +55,18 @@ export default class DraftBoard extends LightningElement {
 
     @wire(getDraftSeasons)
     wiredSeasons({ data, error }) {
-        console.log('getDraftSeasons:', { data, error });
         if (data && data.length > 0) {
-            console.log('Seasons loaded, setting selectedSeasonId to:', data[0].Id);
             this.seasons = data;
-            if (!this.selectedSeasonId) {
-                this.selectedSeasonId = data[0].Id;
-            }
         } else if (error) {
             console.error('getDraftSeasons error:', error);
             this.error = error;
-            this.isLoading = false;
-        } else {
-            console.log('getDraftSeasons returned empty data');
         }
     }
 
     @wire(getLeagueMembersBySeason, { seasonId: '$selectedSeasonId' })
     wiredMembers(result) {
-        console.log('getLeagueMembersBySeason result:', result);
         this._memberWireResult = result;
         if (result.data) {
-            console.log('Members loaded:', result.data.length);
             this.members = result.data.map(m => ({
                 key: m.Draft_Order__c,
                 label: m.League_Member__r.Name,
@@ -92,10 +82,8 @@ export default class DraftBoard extends LightningElement {
 
     @wire(getDraftPicks, { seasonId: '$selectedSeasonId' })
     wiredPicks(result) {
-        console.log('getDraftPicks result:', result);
         this._picksWireResult = result;
         if (result.data) {
-            console.log('Picks loaded:', result.data.length);
             this.picks = result.data.map(p => ({ ...p }));
             this.checkLoadingDone();
         } else if (result.error) {
@@ -106,9 +94,7 @@ export default class DraftBoard extends LightningElement {
     }
 
     checkLoadingDone() {
-        console.log('checkLoadingDone - members:', this.members.length, 'picks:', this.picks.length);
         if (this.members.length > 0 && this.picks.length > 0) {
-            console.log('Setting isLoading to false');
             this.isLoading = false;
         }
     }
