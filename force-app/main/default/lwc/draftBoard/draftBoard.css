@@ -1,15 +1,36 @@
+.rounds-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rounds-control label {
+    margin: 0;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rounds-control lightning-input {
+    width: 80px;
+}
+
 .draft-board-container {
     overflow: auto;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
 }
 
 .draft-board-scroll {
     overflow-x: auto;
+    flex: 1;
 }
 
 .draft-table {
     border-collapse: collapse;
     width: 100%;
     font-size: 0.72rem;
+    height: 100%;
 }
 
 .draft-table th,
@@ -49,7 +70,7 @@
     cursor: pointer;
     min-width: 90px;
     max-width: 110px;
-    min-height: 56px;
+    height: auto;
     transition: background-color 0.12s;
 }
 

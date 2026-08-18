@@ -22,10 +22,11 @@
         </template>
 
         <template lwc:if={picks.length}>
-            <div class="slds-m-around_small">
+            <div class="slds-m-around_small rounds-control">
+                <label for="roundsInput">Rounds:</label>
                 <lightning-input
+                    id="roundsInput"
                     type="number"
-                    label="Max Rounds to Display"
                     value={maxRounds}
                     onchange={handleMaxRoundsChange}
                     min="1"
