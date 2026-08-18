@@ -1,6 +1,6 @@
 public with sharing class DraftBoardController {
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(cacheable=false)
     public static List<Draft_Season__c> getDraftSeasons() {
         return [
             SELECT Id, Name, Year__c
