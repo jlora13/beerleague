@@ -51,7 +51,7 @@ public class DraftBoardSetup {
             FROM League_Member_Season__c
             WHERE Draft_Season__c = :seasonId AND Draft_Order__c != null
         ]) {
-            memberByOrder.put((Integer) lms.Draft_Order__c, lms.League_Member__c);
+            memberByOrder.put(Integer.valueOf(lms.Draft_Order__c), lms.League_Member__c);
         }
 
         if (memberByOrder.size() != TEAMS) {
