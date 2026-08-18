@@ -143,6 +143,13 @@ export default class DraftBoard extends LightningElement {
         this.showPlayerSearch = true;
         this.searchTerm = '';
         this.playerSearchResults = [];
+
+        setTimeout(() => {
+            const input = this.refs.playerSearchInput;
+            if (input) {
+                input.focus();
+            }
+        }, 0);
     }
 
     handleTradedToChange(event) {
