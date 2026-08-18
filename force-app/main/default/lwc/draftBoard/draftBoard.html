@@ -22,17 +22,6 @@
         </template>
 
         <template lwc:if={picks.length}>
-            <div class="slds-m-around_small rounds-control">
-                <label for="roundsInput">Rounds:</label>
-                <lightning-input
-                    id="roundsInput"
-                    type="number"
-                    value={maxRounds}
-                    onchange={handleMaxRoundsChange}
-                    min="1"
-                    max="20"
-                ></lightning-input>
-            </div>
             <div class="draft-board-container slds-m-around_small">
                 <div class="draft-board-scroll">
                     <table class="draft-table">

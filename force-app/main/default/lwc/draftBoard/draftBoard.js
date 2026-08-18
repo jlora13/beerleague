@@ -9,6 +9,7 @@ import updateContactDraftedStatus from '@salesforce/apex/DraftBoardController.up
 
 const TEAMS = 12;
 const ROUNDS = 20;
+const MAX_ROUNDS = ROUNDS;
 
 // Maps Position__c picklist value → CSS class suffix
 const POSITION_CLASS = {
@@ -32,18 +33,10 @@ export default class DraftBoard extends LightningElement {
     @track upsideDown = false;
     @track selectedTradedTo = '';   // League_Member Id chosen in modal
     @track selectedTradeNotes = ''; // Trade_Notes text
-    @track maxRounds = 20;
     @track error;
 
     _picksWireResult;
     _searchTimer;
-
-    connectedCallback() {
-        const saved = localStorage.getItem('draftBoardMaxRounds');
-        if (saved) {
-            this.maxRounds = parseInt(saved, 10);
-        }
-    }
 
     // Odd rounds: left-to-right; even rounds: right-to-left
     overallPickFor(team, round) {
@@ -102,7 +95,7 @@ export default class DraftBoard extends LightningElement {
         this.picks.forEach(p => { pickByOverall[p.Overall_Pick__c] = p; });
 
         const rows = [];
-        for (let round = 1; round <= this.maxRounds; round++) {
+        for (let round = 1; round <= ROUNDS; round++) {
             const cells = [];
             for (let teamIdx = 0; teamIdx < this.members.length; teamIdx++) {
                 const team = teamIdx + 1;
@@ -240,11 +233,6 @@ export default class DraftBoard extends LightningElement {
         this.upsideDown = false;
         this.selectedTradedTo = '';
         this.selectedTradeNotes = '';
-    }
-
-    handleMaxRoundsChange(event) {
-        this.maxRounds = parseInt(event.detail.value, 10);
-        localStorage.setItem('draftBoardMaxRounds', this.maxRounds.toString());
     }
 
     savePick(pickId, newContactId, prevContactId, upsideDown, tradedTo, tradeNotes) {
