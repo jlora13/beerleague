@@ -43,6 +43,7 @@ export default class DraftBoard extends LightningElement {
     @track timerEnabled = false;
     @track timerExpired = false;
     @track timerDisplay = '00:00';
+    @track timerPaused = false;
     @track boardConfig = {};
     @track error;
 
@@ -51,6 +52,10 @@ export default class DraftBoard extends LightningElement {
     _searchTimer;
     _timerInterval;
     _timerSeconds = 0;
+
+    connectedCallback() {
+        // Timer will start automatically once config is loaded
+    }
 
     // Odd rounds: left-to-right; even rounds: right-to-left
     overallPickFor(team, round) {
@@ -72,6 +77,8 @@ export default class DraftBoard extends LightningElement {
             if (data.enableTimer) {
                 this._timerSeconds = (data.timerMinutes * 60) + data.timerSeconds;
                 this.updateTimerDisplay();
+                this.timerPaused = false;
+                this.startTimer();
             }
         } else if (error) {
             console.error('getDraftBoardConfig error:', error);
@@ -311,16 +318,27 @@ export default class DraftBoard extends LightningElement {
     startTimer() {
         this.stopTimer();
         this.timerExpired = false;
+        this.timerPaused = false;
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         this._timerInterval = setInterval(() => {
-            this._timerSeconds--;
-            this.updateTimerDisplay();
+            if (!this.timerPaused) {
+                this._timerSeconds--;
+                this.updateTimerDisplay();
 
-            if (this._timerSeconds <= 0) {
-                this.timerExpired = true;
-                this.stopTimer();
+                if (this._timerSeconds <= 0) {
+                    this.timerExpired = true;
+                    this.stopTimer();
+                }
             }
         }, 1000);
+    }
+
+    toggleTimerPause() {
+        this.timerPaused = !this.timerPaused;
+    }
+
+    get timerPauseButtonText() {
+        return this.timerPaused ? '▶' : '⏸';
     }
 
     stopTimer() {
