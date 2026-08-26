@@ -253,10 +253,10 @@
     font-weight: 900;
     color: #333;
     background-color: #f0f0f0;
-    padding: 12px 80px;
+    padding: 12px 84px;
     border-radius: 6px;
     border: 2px solid #ccc;
-    min-width: 500px;
+    min-width: 525px;
 }
 
 .timer-floating.timer-expired {
