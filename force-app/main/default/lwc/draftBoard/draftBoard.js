@@ -64,7 +64,7 @@ export default class DraftBoard extends LightningElement {
     }
 
     saveTimerState() {
-        if (this.timerEnabled && this._timerInterval) {
+        if (this.timerEnabled) {
             sessionStorage.setItem('draftBoardTimerSeconds', this._timerSeconds);
             sessionStorage.setItem('draftBoardTimerPaused', this.timerPaused);
             sessionStorage.setItem('draftBoardTimerExpired', this.timerExpired);
@@ -104,7 +104,8 @@ export default class DraftBoard extends LightningElement {
             if (data.enableTimer && !this._timerInterval) {
                 // Check if we're restoring from a tab switch
                 const savedSeconds = sessionStorage.getItem('draftBoardTimerSeconds');
-                if (savedSeconds !== null) {
+                const isRestoring = savedSeconds !== null;
+                if (isRestoring) {
                     // Restore existing timer state
                     this._timerSeconds = parseInt(savedSeconds, 10);
                     this.timerPaused = sessionStorage.getItem('draftBoardTimerPaused') === 'true';
@@ -116,7 +117,7 @@ export default class DraftBoard extends LightningElement {
                     this.timerExpired = false;
                 }
                 this.updateTimerDisplay();
-                this.startTimer();
+                this.startTimer(isRestoring);
             }
         } else if (error) {
             console.error('getDraftBoardConfig error:', error);
@@ -349,10 +350,12 @@ export default class DraftBoard extends LightningElement {
         this.timerDisplay = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
     }
 
-    startTimer() {
+    startTimer(isRestoring = false) {
         this.stopTimer();
-        this.timerExpired = false;
-        this.timerPaused = false;
+        if (!isRestoring) {
+            this.timerExpired = false;
+            this.timerPaused = false;
+        }
         // eslint-disable-next-line @lwc/lwc/no-async-operation
         this._timerInterval = setInterval(() => {
             if (!this.timerPaused) {
