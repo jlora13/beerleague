@@ -8,5 +8,6 @@
     <precision>3</precision>
     <scale>0</scale>
     <unique>true</unique>
+    <unique>true</unique>
     <required>true</required>
 </CustomField>
