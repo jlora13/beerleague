@@ -74,7 +74,7 @@ export default class DraftBoard extends LightningElement {
             this.boardConfig = data;
             this.spellCheckerEnabled = data.enableSpellChecker;
             this.timerEnabled = data.enableTimer;
-            if (data.enableTimer) {
+            if (data.enableTimer && !this._timerInterval) {
                 this._timerSeconds = (data.timerMinutes * 60) + data.timerSeconds;
                 this.updateTimerDisplay();
                 this.timerPaused = false;
@@ -206,10 +206,6 @@ export default class DraftBoard extends LightningElement {
         this.showPlayerSearch = true;
         this.searchTerm = '';
         this.playerSearchResults = [];
-
-        if (this.timerEnabled) {
-            this.resetTimer();
-        }
 
         setTimeout(() => {
             const input = this.refs.playerSearchInput;
@@ -359,6 +355,9 @@ export default class DraftBoard extends LightningElement {
     handlePlayerSelect(event) {
         const contactId = event.currentTarget.dataset.contactid;
         this.savePick(this.activePickId, contactId, this.activePrevContactId, this.upsideDown, this.selectedTradedTo, this.selectedTradeNotes);
+        if (this.timerEnabled) {
+            this.resetTimer();
+        }
         this.showPlayerSearch = false;
         this.playerSearchResults = [];
         this.upsideDown = false;
