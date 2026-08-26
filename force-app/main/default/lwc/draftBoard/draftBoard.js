@@ -209,52 +209,54 @@ export default class DraftBoard extends LightningElement {
     handleSearchInput(event) {
         this.searchTerm = event.target.value;
         clearTimeout(this._searchTimer);
-        if (this.searchTerm.length >= 2) {
-            // eslint-disable-next-line @lwc/lwc/no-async-operation
+
+        if (this.spellCheckerEnabled) {
+            this.playerSearchResults = [];
+            this.spellCheckerError = false;
+        } else if (this.searchTerm.length >= 2) {
             this._searchTimer = setTimeout(() => {
                 this.doSearch(this.searchTerm);
             }, 300);
         } else {
             this.playerSearchResults = [];
-            this.spellCheckerError = false;
         }
     }
 
     doSearch(term) {
-        if (this.spellCheckerActive && term.length >= 2) {
-            searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
-                .then(results => {
-                    const termLower = term.toLowerCase();
-                    const exactMatches = results.filter(c => {
-                        const fullName = `${c.FirstName || ''} ${c.LastName || ''}`.toLowerCase().trim();
-                        return fullName === termLower;
-                    });
+        searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
+            .then(results => {
+                this.spellCheckerError = false;
+                this.playerSearchResults = results.map(c => ({
+                    id: c.Id,
+                    firstName: c.FirstName || '',
+                    lastName: c.LastName || '',
+                    team: c.Team__c || '',
+                    bye: c.Bye__c != null ? c.Bye__c : '',
+                    overallRank: c.Overall_Rank__c != null ? c.Overall_Rank__c : '',
+                    positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
+                    position: c.Position__c || ''
+                }));
+            })
+            .catch(err => {
+                console.error('Player search error', err);
+            });
+    }
 
-                    if (exactMatches.length === 0) {
-                        this.spellCheckerError = true;
-                        this.playerSearchResults = [];
-                    } else {
-                        this.spellCheckerError = false;
-                        this.playerSearchResults = exactMatches.map(c => ({
-                            id: c.Id,
-                            firstName: c.FirstName || '',
-                            lastName: c.LastName || '',
-                            team: c.Team__c || '',
-                            bye: c.Bye__c != null ? c.Bye__c : '',
-                            overallRank: c.Overall_Rank__c != null ? c.Overall_Rank__c : '',
-                            positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
-                            position: c.Position__c || ''
-                        }));
-                    }
-                })
-                .catch(err => {
-                    console.error('Player search error', err);
+    doSpellCheckerSearch(term) {
+        searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
+            .then(results => {
+                const termLower = term.toLowerCase();
+                const exactMatches = results.filter(c => {
+                    const fullName = `${c.FirstName || ''} ${c.LastName || ''}`.toLowerCase().trim();
+                    return fullName === termLower;
                 });
-        } else if (!this.spellCheckerActive) {
-            searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
-                .then(results => {
+
+                if (exactMatches.length === 0) {
+                    this.spellCheckerError = true;
+                    this.playerSearchResults = [];
+                } else {
                     this.spellCheckerError = false;
-                    this.playerSearchResults = results.map(c => ({
+                    this.playerSearchResults = exactMatches.map(c => ({
                         id: c.Id,
                         firstName: c.FirstName || '',
                         lastName: c.LastName || '',
@@ -264,14 +266,11 @@ export default class DraftBoard extends LightningElement {
                         positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
                         position: c.Position__c || ''
                     }));
-                })
-                .catch(err => {
-                    console.error('Player search error', err);
-                });
-        } else {
-            this.spellCheckerError = false;
-            this.playerSearchResults = [];
-        }
+                }
+            })
+            .catch(err => {
+                console.error('Player search error', err);
+            });
     }
 
     handleUpsideDownToggle(event) {
@@ -280,7 +279,13 @@ export default class DraftBoard extends LightningElement {
 
     handleSpellCheckerToggle(event) {
         this.spellCheckerActive = event.target.checked;
-        this.spellCheckerError = false;
+
+        if (this.spellCheckerActive && this.searchTerm.length >= 2) {
+            this.doSpellCheckerSearch(this.searchTerm);
+        } else {
+            this.playerSearchResults = [];
+            this.spellCheckerError = false;
+        }
     }
 
     handlePlayerSelect(event) {
