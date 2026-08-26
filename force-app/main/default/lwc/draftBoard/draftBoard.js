@@ -216,11 +216,12 @@ export default class DraftBoard extends LightningElement {
             }, 300);
         } else {
             this.playerSearchResults = [];
+            this.spellCheckerError = false;
         }
     }
 
     doSearch(term) {
-        if (this.spellCheckerActive) {
+        if (this.spellCheckerActive && term.length >= 2) {
             searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
                 .then(results => {
                     const termLower = term.toLowerCase();
@@ -249,7 +250,7 @@ export default class DraftBoard extends LightningElement {
                 .catch(err => {
                     console.error('Player search error', err);
                 });
-        } else {
+        } else if (!this.spellCheckerActive) {
             searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
                 .then(results => {
                     this.spellCheckerError = false;
@@ -267,6 +268,9 @@ export default class DraftBoard extends LightningElement {
                 .catch(err => {
                     console.error('Player search error', err);
                 });
+        } else {
+            this.spellCheckerError = false;
+            this.playerSearchResults = [];
         }
     }
 
