@@ -170,3 +170,17 @@
     font-size: 0.75rem;
     color: #706e6b;
 }
+
+.spell-checker-error {
+    display: block;
+    background-color: #ff0000;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 12px 8px;
+    border-radius: 4px;
+    text-align: center;
+    text-transform: uppercase;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: blink 0.5s infinite;
+}

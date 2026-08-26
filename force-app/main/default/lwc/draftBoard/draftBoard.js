@@ -7,6 +7,7 @@ import getDraftPicks from '@salesforce/apex/DraftBoardController.getDraftPicks';
 import getLeagueMembersBySeason from '@salesforce/apex/DraftBoardController.getLeagueMembersBySeason';
 import searchPlayers from '@salesforce/apex/DraftBoardController.searchPlayers';
 import updateContactDraftedStatus from '@salesforce/apex/DraftBoardController.updateContactDraftedStatus';
+import getDraftBoardConfig from '@salesforce/apex/DraftBoardController.getDraftBoardConfig';
 
 const TEAMS = 12;
 const ROUNDS = 20;
@@ -36,6 +37,10 @@ export default class DraftBoard extends LightningElement {
     @track upsideDown = false;
     @track selectedTradedTo = '';   // League_Member Id chosen in modal
     @track selectedTradeNotes = ''; // Trade_Notes text
+    @track spellCheckerEnabled = false;
+    @track spellCheckerActive = false;
+    @track spellCheckerError = false;
+    @track boardConfig = {};
     @track error;
 
     _picksWireResult;
@@ -51,6 +56,16 @@ export default class DraftBoard extends LightningElement {
 
     positionClass(position) {
         return POSITION_CLASS[position] || 'pos-default';
+    }
+
+    @wire(getDraftBoardConfig)
+    wiredConfig({ data, error }) {
+        if (data) {
+            this.boardConfig = data;
+            this.spellCheckerEnabled = data.enableSpellChecker;
+        } else if (error) {
+            console.error('getDraftBoardConfig error:', error);
+        }
     }
 
     @wire(getDraftSeasons)
@@ -205,26 +220,63 @@ export default class DraftBoard extends LightningElement {
     }
 
     doSearch(term) {
-        searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
-            .then(results => {
-                this.playerSearchResults = results.map(c => ({
-                    id: c.Id,
-                    firstName: c.FirstName || '',
-                    lastName: c.LastName || '',
-                    team: c.Team__c || '',
-                    bye: c.Bye__c != null ? c.Bye__c : '',
-                    overallRank: c.Overall_Rank__c != null ? c.Overall_Rank__c : '',
-                    positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
-                    position: c.Position__c || ''
-                }));
-            })
-            .catch(err => {
-                console.error('Player search error', err);
-            });
+        if (this.spellCheckerActive) {
+            searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
+                .then(results => {
+                    const termLower = term.toLowerCase();
+                    const exactMatches = results.filter(c => {
+                        const fullName = `${c.FirstName || ''} ${c.LastName || ''}`.toLowerCase().trim();
+                        return fullName === termLower;
+                    });
+
+                    if (exactMatches.length === 0) {
+                        this.spellCheckerError = true;
+                        this.playerSearchResults = [];
+                    } else {
+                        this.spellCheckerError = false;
+                        this.playerSearchResults = exactMatches.map(c => ({
+                            id: c.Id,
+                            firstName: c.FirstName || '',
+                            lastName: c.LastName || '',
+                            team: c.Team__c || '',
+                            bye: c.Bye__c != null ? c.Bye__c : '',
+                            overallRank: c.Overall_Rank__c != null ? c.Overall_Rank__c : '',
+                            positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
+                            position: c.Position__c || ''
+                        }));
+                    }
+                })
+                .catch(err => {
+                    console.error('Player search error', err);
+                });
+        } else {
+            searchPlayers({ searchTerm: term, seasonId: this.selectedSeasonId })
+                .then(results => {
+                    this.spellCheckerError = false;
+                    this.playerSearchResults = results.map(c => ({
+                        id: c.Id,
+                        firstName: c.FirstName || '',
+                        lastName: c.LastName || '',
+                        team: c.Team__c || '',
+                        bye: c.Bye__c != null ? c.Bye__c : '',
+                        overallRank: c.Overall_Rank__c != null ? c.Overall_Rank__c : '',
+                        positionRank: c.Position_Rank__c != null ? c.Position_Rank__c : '',
+                        position: c.Position__c || ''
+                    }));
+                })
+                .catch(err => {
+                    console.error('Player search error', err);
+                });
+        }
     }
 
     handleUpsideDownToggle(event) {
         this.upsideDown = event.target.checked;
+    }
+
+    handleSpellCheckerToggle(event) {
+        this.spellCheckerActive = event.target.checked;
+        this.spellCheckerError = false;
     }
 
     handlePlayerSelect(event) {

@@ -63,4 +63,42 @@ public with sharing class DraftBoardController {
         Contact c = new Contact(Id = contactId, Is_Drafted__c = isDrafted);
         update c;
     }
+
+    @AuraEnabled(cacheable=true)
+    public static Map<String, Object> getDraftBoardConfig() {
+        Map<String, Object> config = new Map<String, Object>();
+
+        try {
+            List<Draft_Board_Config__mdt> configs = [
+                SELECT Enable_Timer__c, Timer_Minutes__c, Timer_Seconds__c,
+                       Enable_Sequential_Order__c, Enable_Spell_Checker__c
+                FROM Draft_Board_Config__mdt
+                LIMIT 1
+            ];
+
+            if (!configs.isEmpty()) {
+                Draft_Board_Config__mdt cfg = configs[0];
+                config.put('enableTimer', cfg.Enable_Timer__c);
+                config.put('timerMinutes', cfg.Timer_Minutes__c != null ? cfg.Timer_Minutes__c.intValue() : 0);
+                config.put('timerSeconds', cfg.Timer_Seconds__c != null ? cfg.Timer_Seconds__c.intValue() : 0);
+                config.put('enableSequentialOrder', cfg.Enable_Sequential_Order__c);
+                config.put('enableSpellChecker', cfg.Enable_Spell_Checker__c);
+            } else {
+                config.put('enableTimer', false);
+                config.put('timerMinutes', 0);
+                config.put('timerSeconds', 0);
+                config.put('enableSequentialOrder', false);
+                config.put('enableSpellChecker', false);
+            }
+        } catch (Exception e) {
+            system.debug('Error fetching Draft Board Config: ' + e.getMessage());
+            config.put('enableTimer', false);
+            config.put('timerMinutes', 0);
+            config.put('timerSeconds', 0);
+            config.put('enableSequentialOrder', false);
+            config.put('enableSpellChecker', false);
+        }
+
+        return config;
+    }
 }
