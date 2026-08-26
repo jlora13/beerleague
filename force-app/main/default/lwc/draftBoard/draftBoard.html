@@ -21,6 +21,12 @@
             </div>
         </template>
 
+        <template lwc:if={timerExpired}>
+            <div class="timer-expired-banner">
+                TIMES UP, DRINK YOU STUPID IDIOT!
+            </div>
+        </template>
+
         <template lwc:if={picks.length}>
             <div class="board-top-section slds-m-around_small">
                 <div class="board-controls">
