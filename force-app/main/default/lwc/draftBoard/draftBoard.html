@@ -22,14 +22,30 @@
         </template>
 
         <template lwc:if={picks.length}>
-            <div class="slds-m-around_small">
-                <lightning-combobox
-                    name="season"
-                    label="Season"
-                    value={selectedSeasonId}
-                    options={seasonOptions}
-                    onchange={handleSeasonChange}
-                ></lightning-combobox>
+            <div class="board-top-section slds-m-around_small">
+                <div class="board-controls">
+                    <lightning-combobox
+                        name="season"
+                        label="Season"
+                        value={selectedSeasonId}
+                        options={seasonOptions}
+                        onchange={handleSeasonChange}
+                    ></lightning-combobox>
+                </div>
+                <template lwc:if={timerEnabled}>
+                    <template lwc:if={timerExpired}>
+                        <div class="board-timer timer-expired">
+                            ⏱ {timerDisplay}
+                            <button class="slds-button slds-button_neutral timer-reset-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="board-timer">
+                            ⏱ {timerDisplay}
+                            <button class="slds-button slds-button_neutral timer-reset-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                        </div>
+                    </template>
+                </template>
             </div>
             <div class="draft-board-container slds-m-around_small">
                 <div class="draft-board-scroll">
