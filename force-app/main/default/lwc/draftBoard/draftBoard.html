@@ -91,11 +91,33 @@
             <section role="dialog" class="slds-modal slds-fade-in-open" aria-modal="true" aria-label="Select Player">
                 <div class="slds-modal__container">
                     <header class="slds-modal__header">
+                        <div class="modal-header-content">
+                            <h2 class="slds-modal__title">Select Player</h2>
+                            <template lwc:if={timerEnabled}>
+                                <template lwc:if={timerExpired}>
+                                    <div class="timer-display timer-expired">
+                                        ⏱ {timerDisplay}
+                                        <button class="slds-button slds-button_neutral timer-reset-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div class="timer-display">
+                                        ⏱ {timerDisplay}
+                                        <button class="slds-button slds-button_neutral timer-reset-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleCloseSearch}>
                             <lightning-icon icon-name="utility:close" size="small"></lightning-icon>
                         </button>
-                        <h2 class="slds-modal__title">Select Player</h2>
                     </header>
+
+                    <template lwc:if={timerExpired}>
+                        <div class="timer-expired-banner">
+                            TIMES UP, DRINK YOU STUPID IDIOT!
+                        </div>
+                    </template>
                     <div class="slds-modal__content slds-p-around_medium">
                         <template lwc:if={spellCheckerError}>
                             <div class="spell-checker-error slds-m-bottom_medium">

@@ -184,3 +184,56 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     animation: blink 0.5s infinite;
 }
+
+.modal-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.timer-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    background-color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 2px solid #ccc;
+}
+
+.timer-display.timer-expired {
+    background-color: #ff0000;
+    color: #fff;
+    border-color: #cc0000;
+    animation: blink 0.5s infinite;
+}
+
+.timer-reset-btn {
+    padding: 4px 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+}
+
+.timer-expired-banner {
+    background-color: #ff0000;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 900;
+    padding: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    animation: blink 0.5s infinite;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0.3; }
+}

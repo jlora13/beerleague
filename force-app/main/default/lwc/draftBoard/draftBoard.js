@@ -40,12 +40,17 @@ export default class DraftBoard extends LightningElement {
     @track spellCheckerEnabled = false;
     @track spellCheckerActive = false;
     @track spellCheckerError = false;
+    @track timerEnabled = false;
+    @track timerExpired = false;
+    @track timerDisplay = '00:00';
     @track boardConfig = {};
     @track error;
 
     _picksWireResult;
     _memberWireResult;
     _searchTimer;
+    _timerInterval;
+    _timerSeconds = 0;
 
     // Odd rounds: left-to-right; even rounds: right-to-left
     overallPickFor(team, round) {
@@ -63,6 +68,11 @@ export default class DraftBoard extends LightningElement {
         if (data) {
             this.boardConfig = data;
             this.spellCheckerEnabled = data.enableSpellChecker;
+            this.timerEnabled = data.enableTimer;
+            if (data.enableTimer) {
+                this._timerSeconds = (data.timerMinutes * 60) + data.timerSeconds;
+                this.updateTimerDisplay();
+            }
         } else if (error) {
             console.error('getDraftBoardConfig error:', error);
         }
@@ -190,6 +200,10 @@ export default class DraftBoard extends LightningElement {
         this.searchTerm = '';
         this.playerSearchResults = [];
 
+        if (this.timerEnabled) {
+            this.resetTimer();
+        }
+
         setTimeout(() => {
             const input = this.refs.playerSearchInput;
             if (input) {
@@ -288,6 +302,42 @@ export default class DraftBoard extends LightningElement {
         }
     }
 
+    updateTimerDisplay() {
+        const mins = Math.floor(this._timerSeconds / 60);
+        const secs = this._timerSeconds % 60;
+        this.timerDisplay = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    startTimer() {
+        this.stopTimer();
+        this.timerExpired = false;
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        this._timerInterval = setInterval(() => {
+            this._timerSeconds--;
+            this.updateTimerDisplay();
+
+            if (this._timerSeconds <= 0) {
+                this.timerExpired = true;
+                this.stopTimer();
+            }
+        }, 1000);
+    }
+
+    stopTimer() {
+        if (this._timerInterval) {
+            clearInterval(this._timerInterval);
+            this._timerInterval = null;
+        }
+    }
+
+    resetTimer() {
+        this.stopTimer();
+        this._timerSeconds = (this.boardConfig.timerMinutes * 60) + this.boardConfig.timerSeconds;
+        this.timerExpired = false;
+        this.updateTimerDisplay();
+        this.startTimer();
+    }
+
     handlePlayerSelect(event) {
         const contactId = event.currentTarget.dataset.contactid;
         this.savePick(this.activePickId, contactId, this.activePrevContactId, this.upsideDown, this.selectedTradedTo, this.selectedTradeNotes);
@@ -317,6 +367,7 @@ export default class DraftBoard extends LightningElement {
     }
 
     handleCloseSearch() {
+        this.stopTimer();
         this.showPlayerSearch = false;
         this.activePickId = null;
         this.activePrevContactId = null;
