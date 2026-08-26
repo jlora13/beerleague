@@ -54,7 +54,34 @@ export default class DraftBoard extends LightningElement {
     _timerSeconds = 0;
 
     connectedCallback() {
-        // Timer will start automatically once config is loaded
+        // Restore timer state if component reconnects (e.g., tab switch)
+        this.restoreTimerState();
+    }
+
+    disconnectedCallback() {
+        // Save timer state when component disconnects
+        this.saveTimerState();
+    }
+
+    saveTimerState() {
+        if (this.timerEnabled && this._timerInterval) {
+            sessionStorage.setItem('draftBoardTimerSeconds', this._timerSeconds);
+            sessionStorage.setItem('draftBoardTimerPaused', this.timerPaused);
+            sessionStorage.setItem('draftBoardTimerExpired', this.timerExpired);
+        }
+    }
+
+    restoreTimerState() {
+        const savedSeconds = sessionStorage.getItem('draftBoardTimerSeconds');
+        const savedPaused = sessionStorage.getItem('draftBoardTimerPaused');
+        const savedExpired = sessionStorage.getItem('draftBoardTimerExpired');
+
+        if (savedSeconds !== null) {
+            this._timerSeconds = parseInt(savedSeconds, 10);
+            this.timerPaused = savedPaused === 'true';
+            this.timerExpired = savedExpired === 'true';
+            this.updateTimerDisplay();
+        }
     }
 
     // Odd rounds: left-to-right; even rounds: right-to-left
@@ -75,9 +102,20 @@ export default class DraftBoard extends LightningElement {
             this.spellCheckerEnabled = data.enableSpellChecker;
             this.timerEnabled = data.enableTimer;
             if (data.enableTimer && !this._timerInterval) {
-                this._timerSeconds = (data.timerMinutes * 60) + data.timerSeconds;
+                // Check if we're restoring from a tab switch
+                const savedSeconds = sessionStorage.getItem('draftBoardTimerSeconds');
+                if (savedSeconds !== null) {
+                    // Restore existing timer state
+                    this._timerSeconds = parseInt(savedSeconds, 10);
+                    this.timerPaused = sessionStorage.getItem('draftBoardTimerPaused') === 'true';
+                    this.timerExpired = sessionStorage.getItem('draftBoardTimerExpired') === 'true';
+                } else {
+                    // New timer session
+                    this._timerSeconds = (data.timerMinutes * 60) + data.timerSeconds;
+                    this.timerPaused = false;
+                    this.timerExpired = false;
+                }
                 this.updateTimerDisplay();
-                this.timerPaused = false;
                 this.startTimer();
             }
         } else if (error) {
@@ -384,7 +422,6 @@ export default class DraftBoard extends LightningElement {
     }
 
     handleCloseSearch() {
-        this.stopTimer();
         this.showPlayerSearch = false;
         this.activePickId = null;
         this.activePrevContactId = null;
