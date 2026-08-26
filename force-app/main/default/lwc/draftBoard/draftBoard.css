@@ -1,10 +1,9 @@
 .draft-board-container {
-    max-height: 70vh;
+    overflow: auto;
 }
 
 .draft-board-scroll {
     overflow-x: auto;
-    overflow-y: auto;
 }
 
 .draft-table {
@@ -30,12 +29,6 @@
     white-space: nowrap;
 }
 
-.draft-table thead {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background-color: #fff;
-}
 
 .pick-header {
     background-color: #f4a623;
@@ -248,7 +241,7 @@
 
 .timer-floating {
     position: fixed;
-    top: 16px;
+    top: 11px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 9998;
