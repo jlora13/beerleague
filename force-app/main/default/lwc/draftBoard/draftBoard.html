@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title="Beer League Draft Board" icon-name="standard:opportunity">
+    <lightning-card>
 
         <template lwc:if={isLoading}>
             <div class="slds-align_absolute-center slds-m-around_large">
@@ -27,34 +27,23 @@
                     TIME'S UP, DRINK YOU STUPID IDIOT!
                 </div>
             </template>
-
-            <div class="board-top-section slds-m-around_small">
-                <div class="board-controls">
-                    <lightning-combobox
-                        name="season"
-                        label="Season"
-                        value={selectedSeasonId}
-                        options={seasonOptions}
-                        onchange={handleSeasonChange}
-                    ></lightning-combobox>
-                </div>
-                <template lwc:if={timerEnabled}>
-                    <template lwc:if={timerExpired}>
-                        <div class="timer-display timer-expired">
-                            ⏱ {timerDisplay}
-                            <button class="slds-button slds-button_neutral timer-mini-btn" onclick={toggleTimerPause} title="Pause/Resume Timer">{timerPauseButtonText}</button>
-                            <button class="slds-button slds-button_neutral timer-mini-btn" onclick={resetTimer} title="Reset Timer">↻</button>
-                        </div>
-                    </template>
-                    <template lwc:else>
-                        <div class="timer-display">
-                            ⏱ {timerDisplay}
-                            <button class="slds-button slds-button_neutral timer-mini-btn" onclick={toggleTimerPause} title="Pause/Resume Timer">{timerPauseButtonText}</button>
-                            <button class="slds-button slds-button_neutral timer-mini-btn" onclick={resetTimer} title="Reset Timer">↻</button>
-                        </div>
-                    </template>
+            <template lwc:if={timerEnabled}>
+                <template lwc:if={timerExpired}>
+                    <div class="timer-floating timer-expired">
+                        ⏱ {timerDisplay}
+                        <button class="slds-button slds-button_neutral timer-mini-btn" onclick={toggleTimerPause} title="Pause/Resume Timer">{timerPauseButtonText}</button>
+                        <button class="slds-button slds-button_neutral timer-mini-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                    </div>
                 </template>
-            </div>
+                <template lwc:else>
+                    <div class="timer-floating">
+                        ⏱ {timerDisplay}
+                        <button class="slds-button slds-button_neutral timer-mini-btn" onclick={toggleTimerPause} title="Pause/Resume Timer">{timerPauseButtonText}</button>
+                        <button class="slds-button slds-button_neutral timer-mini-btn" onclick={resetTimer} title="Reset Timer">↻</button>
+                    </div>
+                </template>
+            </template>
+
             <div class="draft-board-container slds-m-around_small">
                 <div class="draft-board-scroll">
                     <table class="draft-table">
@@ -106,6 +95,18 @@
                             </template>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div class="board-bottom-section slds-m-around_small">
+                <div class="board-controls">
+                    <lightning-combobox
+                        name="season"
+                        label="Season"
+                        value={selectedSeasonId}
+                        options={seasonOptions}
+                        onchange={handleSeasonChange}
+                    ></lightning-combobox>
                 </div>
             </div>
         </template>
