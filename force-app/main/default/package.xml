@@ -66,10 +66,6 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
-        <members>Default_Config</members>
-        <name>CustomMetadata</name>
-    </types>
-    <types>
         <members>Draft_Board_Config__mdt</members>
         <name>CustomMetadataType</name>
     </types>
