@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadataType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Draft Board Config</label>
+    <pluralLabel>Draft Board Configs</pluralLabel>
+    <description>Configuration settings for Beer League Draft Board features</description>
+    <fields>
+        <fullName>Enable_Timer__c</fullName>
+        <label>Enable Timer</label>
+        <description>Activate countdown timer on the draft board</description>
+        <type>Checkbox</type>
+        <required>true</required>
+    </fields>
+    <fields>
+        <fullName>Timer_Minutes__c</fullName>
+        <label>Timer Minutes</label>
+        <description>Timer duration in minutes</description>
+        <type>Number</type>
+        <precision>3</precision>
+        <scale>0</scale>
+        <required>false</required>
+    </fields>
+    <fields>
+        <fullName>Timer_Seconds__c</fullName>
+        <label>Timer Seconds</label>
+        <description>Timer duration in seconds (added to minutes)</description>
+        <type>Number</type>
+        <precision>2</precision>
+        <scale>0</scale>
+        <required>false</required>
+    </fields>
+    <fields>
+        <fullName>Enable_Spell_Checker__c</fullName>
+        <label>Enable Spell Checker</label>
+        <description>Enforce exact player name matching in search</description>
+        <type>Checkbox</type>
+        <required>true</required>
+    </fields>
+    <fields>
+        <fullName>Enable_Sequential_Order__c</fullName>
+        <label>Enable Sequential Order</label>
+        <description>Require picks in sequential order (future feature)</description>
+        <type>Checkbox</type>
+        <required>true</required>
+    </fields>
+    <visibility>Public</visibility>
+</CustomMetadataType>

@@ -3,6 +3,8 @@
     <types>
         <members>League_Member__c</members>
         <members>Draft_Pick__c</members>
+        <members>Draft_Season__c</members>
+        <members>League_Member_Season__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -16,11 +18,27 @@
         <members>Draft_Pick__c.Player__c</members>
         <members>Draft_Pick__c.Is_Picked__c</members>
         <members>Draft_Pick__c.Is_Upside_Down__c</members>
+        <members>Draft_Pick__c.Traded_To__c</members>
+        <members>Draft_Pick__c.Trade_Notes__c</members>
+        <members>Draft_Pick__c.Draft_Season__c</members>
+        <members>Draft_Season__c.Year__c</members>
+        <members>League_Member_Season__c.League_Member__c</members>
+        <members>League_Member_Season__c.Draft_Season__c</members>
+        <members>League_Member_Season__c.Draft_Order__c</members>
+        <members>Contact.Team__c</members>
+        <members>Contact.Position__c</members>
+        <members>Contact.Overall_Rank__c</members>
+        <members>Contact.Position_Rank__c</members>
+        <members>Contact.Bye__c</members>
+        <members>Contact.Draft_Season__c</members>
+        <members>Contact.Is_Drafted__c</members>
         <name>CustomField</name>
     </types>
     <types>
         <members>League_Member__c</members>
         <members>Draft_Pick__c</members>
+        <members>Draft_Season__c</members>
+        <members>League_Member_Season__c</members>
         <name>CustomTab</name>
     </types>
     <types>
@@ -39,11 +57,21 @@
     <types>
         <members>DraftBoardController</members>
         <members>DraftBoardSetup</members>
+        <members>DraftBoardExport</members>
+        <members>DraftBoardImport</members>
         <name>ApexClass</name>
     </types>
     <types>
         <members>draftBoard</members>
         <name>LightningComponentBundle</name>
     </types>
-    <version>62.0</version>
+    <types>
+        <members>Default_Config</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
+        <members>Draft_Board_Config__mdt</members>
+        <name>CustomMetadataType</name>
+    </types>
+    <version>67.0</version>
 </Package>

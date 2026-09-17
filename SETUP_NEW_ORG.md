@@ -35,29 +35,33 @@ sf project deploy start --target-org my-org-alias
 
 This deploys:
 - **Custom Objects**: Draft_Pick__c, Draft_Season__c, League_Member__c, League_Member_Season__c
-- **Custom Metadata Type**: Draft_Board_Config__mdt
+- **Custom Metadata Type**: Draft_Board_Config__mdt (with configuration record)
+- **Contact Custom Fields**: Team__c, Position__c, Overall_Rank__c, Position_Rank__c, Bye__c, Draft_Season__c, Is_Drafted__c
+- **Draft_Pick__c Custom Fields**: All fields including Traded_To__c, Trade_Notes__c, Draft_Season__c
 - **Apex Classes**: DraftBoardController, DraftBoardSetup, DraftBoardExport, DraftBoardImport
 - **Lightning Components**: draftBoard (main draft board LWC)
 - **Other**: Page layouts, record types, applications, flex pages
 
-### 3. Create Draft Board Configuration
+✅ **All Contact player fields are automatically deployed!**
 
-The Draft_Board_Config__mdt custom metadata controls all feature toggles:
+### 3. Verify Draft Board Configuration
 
-**In Salesforce UI:**
+✅ **Deployed Automatically!**
+
+The Draft_Board_Config__mdt custom metadata type and default configuration record are now automatically deployed with the metadata. 
+
+Default values:
+- **Enable_Timer__c**: ☑ checked
+- **Timer_Minutes__c**: 5
+- **Timer_Seconds__c**: 0
+- **Enable_Spell_Checker__c**: ☑ checked
+- **Enable_Sequential_Order__c**: ☐ unchecked
+
+**To modify settings:**
 1. Setup → Custom Metadata Types
 2. Click "Draft Board Config"
-3. Click "Manage Records" → "New"
-4. Fill in:
-   ```
-   Label: Default Config
-   API Name: Default_Config
-   Enable_Timer__c: ☑ (checked)
-   Timer_Minutes__c: 5
-   Timer_Seconds__c: 0
-   Enable_Spell_Checker__c: ☑ (checked)
-   Enable_Sequential_Order__c: ☐ (unchecked)
-   ```
+3. Click "Manage Records" → "Default_Config"
+4. Edit the values as needed
 5. Save
 
 **Configuration Options:**
