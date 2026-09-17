@@ -3,7 +3,7 @@
     <fullName>Trade_Notes__c</fullName>
     <externalId>false</externalId>
     <label>Trade Notes</label>
-    <length>1000</length>
+    <length>255</length>
     <required>false</required>
     <type>Text</type>
     <unique>false</unique>

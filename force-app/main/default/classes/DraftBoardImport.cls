@@ -34,7 +34,7 @@ public class DraftBoardImport {
 
             members.add(new League_Member__c(
                 Name = row[1],
-                Draft_Order__c = row[2]
+                Draft_Order__c = Decimal.valueOf(row[2])
             ));
         }
         upsert members Name;
@@ -102,9 +102,9 @@ public class DraftBoardImport {
                 LastName = row[2],
                 Team__c = row[3],
                 Position__c = row[4],
-                Overall_Rank__c = row[5].isEmpty() ? null : Decimal.valueOf(row[5]),
-                Position_Rank__c = row[6].isEmpty() ? null : Decimal.valueOf(row[6]),
-                Bye__c = row[7].isEmpty() ? null : Decimal.valueOf(row[7]),
+                Overall_Rank__c = String.isBlank(row[5]) ? null : Decimal.valueOf(row[5]),
+                Position_Rank__c = String.isBlank(row[6]) ? null : Decimal.valueOf(row[6]),
+                Bye__c = String.isBlank(row[7]) ? null : Decimal.valueOf(row[7]),
                 Draft_Season__c = seasonId,
                 Is_Drafted__c = isDrafted
             ));
@@ -157,8 +157,6 @@ public class DraftBoardImport {
 
             picks.add(new Draft_Pick__c(
                 Overall_Pick__c = Decimal.valueOf(row[1]),
-                Round__c = Decimal.valueOf(row[2]),
-                Pick_In_Round__c = Decimal.valueOf(row[3]),
                 League_Member__c = memberId,
                 Player__c = playerId,
                 Is_Picked__c = isPicked,
